@@ -1,23 +1,45 @@
-import logo from './logo.svg';
-import './App.css';
+import { useEffect, useState } from "react";
+import "./App.css";
 
 function App() {
+  const [user, setUser] = useState([]);
+
+  useEffect(() => {
+    fetch("http://localhost:5000/user")
+      .then((res) => res.json())
+      .then((data) => setUser(data));
+  }, []);
+
+  const handleAddUser = (e) => {
+    e.preventDefault();
+    const name = e.target.name.value;
+    const email = e.target.email.value;
+    const user = { name, email };
+    console.log(user);
+    e.target.reset();
+  };
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <form onSubmit={handleAddUser}>
+        <input type="text" name="name" id="" placeholder="Enter your name" />{" "}
+        <br />
+        <input
+          type="email"
+          name="email"
+          id=""
+          placeholder="Enter your email"
+        />{" "}
+        <br />
+        <button type="submit"> Add user</button>
+      </form>
+      <h1>user:{user.length}</h1>
+      <div>
+        {user.map((user) => (
+          <p key={user.id}>
+            {user.name} {user.email}{" "}
+          </p>
+        ))}
+      </div>
     </div>
   );
 }
